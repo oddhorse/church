@@ -16,11 +16,11 @@ window.onload = () => {
 
 	//=====ELEMENTS AND STATE=====//
 	// audio
-	const bell = new Audio("bell.mp3")
-	const crowdTalk = new Audio("crowd-talking.mp3")
-	const shh = new Audio("shh.mp3")
-	const knock = new Audio("knock.mp3")
-	const slam = new Audio("slam.mp3")
+	const bell = new Audio("audio/bell.mp3")
+	const crowdTalk = new Audio("audio/crowd-talking.mp3")
+	const shh = new Audio("audio/shh.mp3")
+	const knock = new Audio("audio/knock.mp3")
+	const slam = new Audio("audio/slam.mp3")
 
 	// elements
 	const light = document.getElementById("light")
@@ -41,7 +41,7 @@ window.onload = () => {
 	//=====HAMMER AND MARTIN LUTHER=====//
 
 	bush.addEventListener("click", () => {
-		let rustle = new Audio("rustle.mp3").play()
+		let rustle = new Audio("audio/rustle.mp3").play()
 		if (!hammerFound && bushClicks < 3) bushClicks++
 		if (!hammerFound && bushClicks === 3) {
 			hammerFromBush()
@@ -78,8 +78,8 @@ window.onload = () => {
 		hammer.style.opacity = 0
 		hammer.style.display = "none"
 
-		document.documentElement.style.cursor = "url('hammer.png'), auto"
-		world.style.cursor = "url('hammer.png'), auto"
+		document.documentElement.style.cursor = "url('images/hammer.png'), auto"
+		world.style.cursor = "url('images/hammer.png'), auto"
 		hammerActive = true
 	})
 
