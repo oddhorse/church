@@ -26,9 +26,11 @@ window.onload = () => {
 	const light = document.getElementById("light")
 	const church = document.getElementById("church")
 	const world = document.getElementById("world")
+	const theses = document.getElementById("theses")
 	const bush = document.getElementById("bush")
 	const congregation = document.getElementById("congregation")
 	const hammer = document.getElementById("hammer")
+	const martin = document.getElementById("martin")
 	const pageTitle = document.getElementById("page-title")
 
 	let ringsRemaining = 0
@@ -42,6 +44,7 @@ window.onload = () => {
 
 	bush.addEventListener("click", () => {
 		let rustle = new Audio("audio/rustle.mp3").play()
+		wiggleBush()
 		if (!hammerFound && bushClicks < 3) bushClicks++
 		if (!hammerFound && bushClicks === 3) {
 			hammerFromBush()
@@ -49,8 +52,31 @@ window.onload = () => {
 		}
 	})
 
+	function wiggleBush() {
+		bush.animate(
+			[
+				{ transform: "translateX(-2px)" },
+				{ transform: "translateX(2px)" },
+				{ transform: "translateX(-2px)" },
+				{ transform: "translateX(2px)" },
+				{ transform: "translateX(-2px)" },
+				{ transform: "translateX(2px)" },
+				{ transform: "translateX(-2px)" },
+				{ transform: "translateX(2px)" },
+				// { transform: "translateY(0px)" },
+			],
+			{
+				duration: 500,
+				iterations: 1,
+				delay: 0,
+				easing: "ease-in-out",
+			}
+		)
+	}
+
 	function hammerFromBush() {
 		hammer.style.opacity = "100%"
+		hammer.hidden = false
 		hammer.style.zIndex = 1
 		hammer.animate(
 			[
@@ -66,22 +92,45 @@ window.onload = () => {
 				easing: "ease-in-out",
 			}
 		)
-		bush.style.cursor = "inherit"
+		//bush.style.cursor = "inherit"
 	}
 
 	function flashMartinLuther() {
-
+		martin.hidden = false
+		martin.animate(
+			[
+				{ opacity: "100%" },
+				{ opacity: "0%" },
+			],
+			{
+				duration: 2500,
+				iterations: 1,
+				delay: 0,
+				easing: "ease-in-out",
+			}
+		)
+		setTimeout(() => {
+			martin.hidden = true
+		}, 2500)
 	}
 
 	hammer.addEventListener("click", () => {
 		// https://vueschool.io/articles/vuejs-tutorials/how-to-update-root-css-variable-with-javascript/
-		hammer.style.opacity = 0
-		hammer.style.display = "none"
+		hammer.hidden = true
+		setHammerCursor()
+	})
 
+	function setHammerCursor() {
 		document.documentElement.style.cursor = "url('images/hammer.png'), auto"
 		world.style.cursor = "url('images/hammer.png'), auto"
 		hammerActive = true
-	})
+	}
+
+	function removeHammerCursor() {
+		document.documentElement.style.cursor = ""
+		world.style.cursor = ""
+		hammerActive = false
+	}
 
 	//=====RECURSIVE BELL HANDLING=====//
 	// not biggest recursive fan in the world but simplest way i know to handle the timed nature
@@ -356,7 +405,8 @@ window.onload = () => {
 	church.addEventListener("click", () => {
 		if (hammerActive) {
 			flashMartinLuther()
-			hammerActive = false
+			theses.hidden = false
+			removeHammerCursor()
 			return
 		}
 		knock.play()
