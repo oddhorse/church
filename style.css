@@ -86,6 +86,14 @@ button:hover {
 	scale: 120%;
 }
 
+/* stops images from being dragged */
+img {
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	user-select: none;
+	touch-action: manipulation;
+}
+
 #congregation {
 	position: absolute;
 	translate: 0 -50%;
@@ -107,7 +115,15 @@ button:hover {
 	top: 50%;
 	left: 50%;
 	opacity: 0;
-	pointer-events: none;
+	cursor: url('images/hammer.png'), auto;
+}
+
+#theses-big {
+	position: absolute;
+	translate: -50% -50%;
+	top: 50%;
+	left: 50%;
+	opacity: 0;
 }
 
 

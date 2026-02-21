@@ -21,6 +21,7 @@ window.onload = () => {
 	const shh = new Audio("audio/shh.mp3")
 	const knock = new Audio("audio/knock.mp3")
 	const slam = new Audio("audio/slam.mp3")
+	const hammering = new Audio("audio/hammer.mp3")
 
 	// elements
 	const light = document.getElementById("light")
@@ -31,6 +32,7 @@ window.onload = () => {
 	const congregation = document.getElementById("congregation")
 	const hammer = document.getElementById("hammer")
 	const martin = document.getElementById("martin")
+	const thesesBig = document.getElementById("theses-big")
 	const pageTitle = document.getElementById("page-title")
 
 	let ringsRemaining = 0
@@ -43,7 +45,7 @@ window.onload = () => {
 	//=====HAMMER AND MARTIN LUTHER=====//
 
 	bush.addEventListener("click", () => {
-		let rustle = new Audio("audio/rustle.mp3").play()
+		new Audio("audio/rustle.mp3").play()
 		wiggleBush()
 		if (!hammerFound && bushClicks < 3) bushClicks++
 		if (!hammerFound && bushClicks === 3) {
@@ -97,21 +99,53 @@ window.onload = () => {
 
 	function flashMartinLuther() {
 		martin.hidden = false
+		new Audio("audio/bell.mp3").play()
 		martin.animate(
 			[
 				{ opacity: "100%" },
+				{ opacity: "100%" },
+				{ opacity: "75%" },
+				{ opacity: "50%" },
+				{ opacity: "25%" },
 				{ opacity: "0%" },
 			],
 			{
-				duration: 2500,
+				duration: 3000,
 				iterations: 1,
 				delay: 0,
 				easing: "ease-in-out",
 			}
 		)
 		setTimeout(() => {
+			hammering.play()
+		}, 1000)
+		setTimeout(() => {
 			martin.hidden = true
-		}, 2500)
+		}, 3000)
+	}
+
+	function flashTheses() {
+		thesesBig.hidden = false
+		new Audio("audio/bell.mp3").play()
+		thesesBig.animate(
+			[
+				{ opacity: "100%" },
+				{ opacity: "100%" },
+				{ opacity: "75%" },
+				{ opacity: "50%" },
+				{ opacity: "25%" },
+				{ opacity: "0%" },
+			],
+			{
+				duration: 3000,
+				iterations: 1,
+				delay: 0,
+				easing: "ease-in-out",
+			}
+		)
+		setTimeout(() => {
+			thesesBig.hidden = true
+		}, 3000)
 	}
 
 	hammer.addEventListener("click", () => {
@@ -121,16 +155,20 @@ window.onload = () => {
 	})
 
 	function setHammerCursor() {
-		document.documentElement.style.cursor = "url('images/hammer.png'), auto"
+		// document.documentElement.style.cursor = "url('images/hammer.png'), auto"
 		world.style.cursor = "url('images/hammer.png'), auto"
 		hammerActive = true
 	}
 
 	function removeHammerCursor() {
-		document.documentElement.style.cursor = ""
+		// document.documentElement.style.cursor = ""
 		world.style.cursor = ""
 		hammerActive = false
 	}
+
+	theses.addEventListener("click", () => {
+		flashTheses()
+	})
 
 	//=====RECURSIVE BELL HANDLING=====//
 	// not biggest recursive fan in the world but simplest way i know to handle the timed nature
