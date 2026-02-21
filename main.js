@@ -273,14 +273,31 @@ window.onload = () => {
 				{ left: "45%", top: "calc(60% - 30px)", scale: "40%" }, // stop at door
 			],
 			{
-				duration: 2000,
+				duration: 2500,
 				iterations: 1,
 				delay: 0,
 				easing: "linear",
 			}
 		)
+		setTimeout(() => {
+			congregation.classList.remove("walking")
+			congregation.style.animationPlayState = ""
+			congregation.animate(
+				[
+					{ left: "45%", top: "calc(60% - 30px)", scale: "40%" },
+					{ left: "45%", top: "calc(60% - 30px)", scale: "40%" },
+				],
+				{
+					duration: 1000,
+					iterations: 1,
+					delay: 0,
+					easing: "steps(2)",
+				}
+			)
+		}, 2500)
 		// hesitate then leave
 		setTimeout(() => {
+			congregation.classList.add("walking")
 			knock.play()
 			congregation.animate(
 				[
@@ -290,11 +307,11 @@ window.onload = () => {
 				{
 					duration: 2000,
 					iterations: 1,
-					delay: 1000,
+					delay: 0,
 					easing: "linear",
 				}
 			)
-		}, 500)
+		}, 3500)
 	}
 
 	// DEMO BUTTONS
