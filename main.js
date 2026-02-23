@@ -18,15 +18,97 @@ window.onload = () => {
 
 	//=====ELEMENTS AND STATE=====//
 	// audio
-	const bell = new Audio("audio/bell.mp3")
-	const talkAudio = new Audio("audio/crowd-talking.mp3")
-	const oohAudio = new Audio("audio/crowd-ooh.mp3")
-	const whispAudio = new Audio("audio/crowd-whisper.mp3")
-	const shhAudio = new Audio("audio/shh.mp3")
-	const knockAudio = new Audio("audio/knock.mp3")
-	const slamAudio = new Audio("audio/slam.mp3")
-	const hammerAudio = new Audio("audio/hammer.mp3")
-	const rustleAudio = new Audio("audio/rustle.mp3")
+	// migrate to Web Audio API buffers (more reliable mixing / mobile unlock)
+	const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+	const audioFiles = {
+		bell: "audio/bell.mp3",
+		crowdTalk: "audio/crowd-talking.mp3",
+		crowdOoh: "audio/crowd-ooh.mp3",
+		crowdWhisper: "audio/crowd-whisper.mp3",
+		shh: "audio/shh.mp3",
+		knock: "audio/knock.mp3",
+		slam: "audio/slam.mp3",
+		hammer: "audio/hammer.mp3",
+		rustle: "audio/rustle.mp3",
+	}
+	const audioBuffers = {}
+	const activeSources = {} // store sources we may stop (eg. knock)
+
+	// preload & decode all files (non-blocking)
+	async function loadAudioFiles() {
+		await Promise.all(
+			Object.entries(audioFiles).map(async ([key, url]) => {
+				try {
+					const resp = await fetch(url)
+					const ab = await resp.arrayBuffer()
+					audioBuffers[key] = await audioContext.decodeAudioData(ab)
+				} catch (e) {
+					// if fetch/decode fails, leave undefined and fallback to HTMLAudio later
+				}
+			})
+		)
+	}
+	loadAudioFiles().catch(() => { })
+
+	// resume audioContext on user gesture
+	function unlockAudioContext() {
+		if (audioContext.state === "suspended") audioContext.resume().catch(() => { })
+		window.removeEventListener("touchstart", unlockAudioContext)
+		window.removeEventListener("click", unlockAudioContext)
+	}
+	window.addEventListener("touchstart", unlockAudioContext, { once: true })
+	window.addEventListener("click", unlockAudioContext, { once: true })
+
+	/**
+	 * playSound - plays a decoded buffer (or falls back to HTMLAudio)
+	 * @param {string} name - key from audioFiles
+	 * @param {Object} opts
+	 * @param {boolean} [opts.loop=false] - loop playback
+	 * @param {number} [opts.volume=1] - gain
+	 * @param {boolean} [opts.store=false] - store source in activeSources so it can be stopped
+	 * @returns {object|undefined} - { stop() } handle for stopping when available
+	 */
+	function playSound(name, { loop = false, volume = 1, store = false } = {}) {
+		const buf = audioBuffers[name]
+		if (buf) {
+			const src = audioContext.createBufferSource()
+			const gain = audioContext.createGain()
+			src.buffer = buf
+			src.loop = loop
+			gain.gain.value = volume
+			src.connect(gain)
+			gain.connect(audioContext.destination)
+			src.start()
+			if (store) {
+				activeSources[name] = src
+			}
+			return { stop: () => { try { src.stop() } catch (e) { }; if (activeSources[name] === src) delete activeSources[name] } }
+		} else {
+			// fallback: ephemeral HTMLAudio (keeps existing behaviour if decode not ready)
+			const url = audioFiles[name]
+			if (!url) return
+			try {
+				const a = new Audio(url)
+				a.loop = loop
+				a.volume = volume
+				a.play().catch(() => { })
+				if (store) {
+					activeSources[name] = a
+					return { stop: () => { try { a.pause(); a.currentTime = 0 } catch (e) { }; if (activeSources[name] === a) delete activeSources[name] } }
+				}
+			} catch (e) { }
+		}
+	}
+
+	function stopSound(name) {
+		const s = activeSources[name]
+		if (!s) return
+		try {
+			if (s.stop) s.stop()
+			else { s.pause(); s.currentTime = 0 }
+		} catch (e) { }
+		delete activeSources[name]
+	}
 
 	// elements
 	const light = document.getElementById("light")
@@ -56,7 +138,7 @@ window.onload = () => {
 	//=====HAMMER AND MARTIN LUTHER=====//
 
 	bush.addEventListener("click", () => {
-		rustleAudio.play()
+		playSound("rustle")
 		wiggleBush()
 		if (!hammerFound && bushClicks < 3) bushClicks++
 		if (!hammerFound && bushClicks === 3) {
@@ -110,7 +192,7 @@ window.onload = () => {
 
 	function flashMartinLuther() {
 		martin.hidden = false
-		new Audio("audio/bell.mp3").play()
+		playSound("bell")
 		martin.animate(
 			[
 				{ opacity: "100%" },
@@ -128,7 +210,7 @@ window.onload = () => {
 			}
 		)
 		setTimeout(() => {
-			hammerAudio.play()
+			playSound("hammer")
 		}, 1000)
 		setTimeout(() => {
 			martin.hidden = true
@@ -137,7 +219,7 @@ window.onload = () => {
 
 	function flashTheses() {
 		thesesBig.hidden = false
-		new Audio("audio/bell.mp3").play()
+		playSound("bell")
 		thesesBig.animate(
 			[
 				{ opacity: "100%" },
@@ -228,7 +310,7 @@ window.onload = () => {
 		for (let i = 1; i <= count; i++) {
 			const timeTil = (i - 1) * 3300
 			setTimeout(() => {
-				new Audio("audio/bell.mp3").play()
+				playSound("bell")
 				pageTitle.innerText = `the bell tolls ${getCountWord(i)}`
 				shineLightUponChurch()
 			}, timeTil)
@@ -311,7 +393,7 @@ window.onload = () => {
 			return
 		}
 		congregating = true
-		talkAudio.play()
+		playSound("crowdTalk")
 		const r = door.getBoundingClientRect()
 		console.log(`left: ${r.left}px, top: ${r.top}px`)
 		congregation.animate(
@@ -340,7 +422,7 @@ window.onload = () => {
 			}
 		)
 		setTimeout(() => {
-			slamAudio.play()
+			playSound("slam")
 		}, 2400)
 	}
 
@@ -353,8 +435,8 @@ window.onload = () => {
 			return
 		}
 		congregating = false
-		talkAudio.play()
-		slamAudio.play()
+		playSound("crowdTalk")
+		playSound("slam")
 		const r = door.getBoundingClientRect()
 		congregation.animate(
 			[
@@ -392,7 +474,7 @@ window.onload = () => {
 			return
 		}
 		congregating = false
-		slamAudio.play()
+		playSound("slam")
 		world.animate(
 			[
 				{ scale: "100%" },
@@ -410,7 +492,7 @@ window.onload = () => {
 		setTimeout(() => {
 			congregation.classList.remove("walking")
 			congregation.style.animationPlayState = ""
-			oohAudio.play()
+			playSound("crowdOoh")
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
@@ -427,7 +509,7 @@ window.onload = () => {
 		// hesitate then leave
 		setTimeout(() => {
 			congregation.classList.add("walking")
-			whispAudio.play()
+			playSound("crowdWhisper")
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "-40% 40%" },
@@ -451,7 +533,7 @@ window.onload = () => {
 			console.log("already inside!")
 			return
 		}
-		talkAudio.play()
+		playSound("crowdTalk")
 		const r = door.getBoundingClientRect()
 		congregation.animate(
 			[
@@ -468,7 +550,7 @@ window.onload = () => {
 		setTimeout(() => {
 			congregation.classList.remove("walking")
 			congregation.style.animationPlayState = ""
-			oohAudio.play()
+			playSound("crowdOoh")
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
@@ -485,7 +567,7 @@ window.onload = () => {
 		// hesitate then leave
 		setTimeout(() => {
 			congregation.classList.add("walking")
-			whispAudio.play()
+			playSound("crowdWhisper")
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "-40% 40%" },
@@ -570,20 +652,15 @@ window.onload = () => {
 			}, 2500)
 			return
 		}
-		knockAudio.play()
+		playSound("knock", { store: true })
 		if (congregating) {
 			setTimeout(() => {
-				shhAudio.play()
+				playSound("shh")
 				setTimeout(() => {
-					knockAudio.pause()
-					knockAudio.currentTime = 0
+					stopSound("knock")
 				}, 450)
 			}, 100)
 		}
 	})
-
-	//=====UTILITY=====//
-
-	//function ()
 }
 
