@@ -42,6 +42,7 @@ window.onload = () => {
 	let hammerFound = false
 	let bushClicks = 0
 	let hammerActive = false
+	let thesesPosted = false
 
 	//=====HAMMER AND MARTIN LUTHER=====//
 
@@ -351,12 +352,16 @@ window.onload = () => {
 	}
 
 	/**
+	 * congregants leave the church during service and read the door and go home
+	 */
+	function endSermonEarly() {
+		//[TODO] write this
+	}
+
+	/**
 	 * congregants approach church and hesitate at the door and then leave
 	 */
 	function protestTheChurch() {
-		if (congregating) {
-			// [TODO] make the congregation come out, look at the door, and leave grumbling
-		}
 		new Audio("audio/crowd-talking.mp3").play()
 		const r = door.getBoundingClientRect()
 		congregation.animate(
@@ -437,12 +442,18 @@ window.onload = () => {
 		// on sundays
 		if (day === 0) {
 			// early congregation 
-			if (hr === 9 && min === 15 && sec === 0) goToChurch()
-			if (hr === 10 && min === 30 && sec === 0) leaveChurch()
+			if (hr === 9 && min === 15 && sec === 0) {
+				if (thesesPosted) protestTheChurch()
+				else goToChurch()
+			}
+			if (hr === 10 && min === 30 && sec === 0 && !thesesPosted) leaveChurch()
 
 			// late congregation
-			if (hr === 10 && min === 45 && sec === 0) goToChurch()
-			if (hr === 12 && min === 0 && sec === 0) leaveChurch()
+			if (hr === 10 && min === 45 && sec === 0) {
+				if (thesesPosted) protestTheChurch()
+				else goToChurch()
+			}
+			if (hr === 12 && min === 0 && sec === 0 && !thesesPosted) leaveChurch()
 		}
 	}, 1000)
 
@@ -450,6 +461,7 @@ window.onload = () => {
 		if (hammerActive) {
 			flashMartinLuther()
 			theses.hidden = false
+			thesesPosted = true
 			removeHammerCursor()
 			return
 		}
