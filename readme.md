@@ -14,3 +14,4 @@
 - [ ] implement sermon audio
 - [ ] make page title count number of bell rings as they happen
 - [ ] force user to click page first in some in-world way so audio can play
+- [ ] hide test functions

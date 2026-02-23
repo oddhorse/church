@@ -2,15 +2,64 @@
 	by john trinh
 	style.css */
 
+@font-face {
+	font-family: "Karrik";
+	src: url("fonts/Karrik-Regular.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Karrik";
+	src: url("fonts/Karrik-Italic.woff2") format("woff2");
+	font-weight: normal;
+	font-style: italic;
+	font-display: swap;
+}
+
 body {
 	/* https://stackoverflow.com/questions/2284562/absolutely-positioned-div-on-right-causing-scrollbar-when-the-left-doesnt */
 	/* for hiding congregation in the wings */
 	overflow: hidden;
 }
 
-button:hover {
+button {
 	cursor: pointer;
 }
+
+#demo-toggle {
+	position: absolute;
+	top: 0;
+	left: 0;
+	/* width: 20px; */
+	/* height: 20px; */
+	z-index: 10;
+	opacity: 0;
+
+}
+
+#demo-toggle:hover {
+	opacity: 100%;
+}
+
+#demo-toggle:hover+#demo-box {
+	opacity: 100%;
+}
+
+#demo-box {
+	opacity: 40%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: fit-content;
+}
+
+#demo-box:hover {
+	opacity: 100%;
+}
+
+
 
 #light {
 	position: absolute;
@@ -109,27 +158,42 @@ img {
 	animation-direction: alternate;
 }
 
-#martin {
+img.popup {
 	position: absolute;
 	translate: -50% -50%;
 	top: 50%;
 	left: 50%;
 	opacity: 0;
+	width: auto;
+	height: auto;
+	max-width: calc(100svw - 20px);
+	max-height: calc(100svh - 20px);
+}
+
+#martin {
 	cursor: url('images/hammer.png'), auto;
 }
 
-#theses-big {
+#theses-big {}
+
+#footer {
 	position: absolute;
-	translate: -50% -50%;
-	top: 50%;
-	left: 50%;
-	opacity: 0;
+	bottom: 0;
+	right: 0;
+	font-size: 12px;
+	margin: 7px 10px;
+	font-family: Karrik, Helvetica, sans-serif;
+	opacity: 20%;
+	color: #888;
 }
 
+#footer:hover {
+	opacity: 100%;
+}
 
-
-.clicked {
-	background-color: red;
+#footer>a {
+	text-decoration: none;
+	color: black;
 }
 
 @keyframes church-waggle {

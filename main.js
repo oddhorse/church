@@ -4,8 +4,9 @@
 
 window.onload = () => {
 	//=====DEMO/TEST ELEMENTS=====//
-
-	//const time = document.getElementById("time")
+	const demoToggle = document.getElementById("demo-toggle")
+	const demoBox = document.getElementById("demo-box")
+	const demoTime = document.getElementById("demo-time")
 	const demoRingBtn = document.getElementById("demo-ring-btn")
 	const demoRingTwiceBtn = document.getElementById("demo-ring-twice-btn")
 	const demoRingSixBtn = document.getElementById("demo-ring-six-btn")
@@ -43,6 +44,10 @@ window.onload = () => {
 	let bushClicks = 0
 	let hammerActive = false
 	let thesesPosted = false
+
+	demoToggle.addEventListener("click", () => {
+		demoBox.toggleAttribute("hidden")
+	})
 
 	//=====HAMMER AND MARTIN LUTHER=====//
 
@@ -173,9 +178,7 @@ window.onload = () => {
 	})
 
 
-	//TODO rewrite comments
-	//=====RECURSIVE BELL HANDLING=====//
-	// not biggest recursive fan in the world but simplest way i know to handle the timed nature
+	//=====BELL HANDLING=====//
 
 	/**
 	 * returns number of times in written form for title
@@ -520,6 +523,8 @@ window.onload = () => {
 		let min = time.getMinutes()
 		let sec = time.getSeconds()
 		let day = time.getDay() // sunday === 0
+
+		demoTime.innerText = time.toLocaleString()
 
 		// ring bell every hour
 		if (min === 0 && sec == 0) ringChurchBell(hr12)
