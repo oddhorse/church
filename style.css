@@ -34,8 +34,8 @@ button:hover {
 
 	position: absolute;
 	translate: -50% -50%;
-	top: calc(50% - 30px);
-	left: calc(50% - 30px);
+	top: 48%;
+	left: 48%;
 	cursor: grabbing;
 }
 

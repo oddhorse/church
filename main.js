@@ -326,7 +326,7 @@ window.onload = () => {
 		congregation.animate(
 			[
 				{ left: `${r.left - 60}px`, top: `${r.top + 8}px`, scale: "-40% 40%" }, // note neg x val to flip image
-				{ left: "100%", top: "40%", scale: "-80% 80%" },
+				{ left: "100%", top: "50%", scale: "-80% 80%" },
 			],
 			{
 				duration: 2500,
