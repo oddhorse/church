@@ -11,8 +11,8 @@ window.onload = () => {
 	const demoRingSixBtn = document.getElementById("demo-ring-six-btn")
 	const demoCongregateBtn = document.getElementById("demo-congregate-btn")
 	const demoDisperseBtn = document.getElementById("demo-disperse-btn")
+	const demoProtestEarlyBtn = document.getElementById("demo-protest-early-btn")
 	const demoProtestBtn = document.getElementById("demo-protest-btn")
-	const demoReplaceHammerBtn = document.getElementById("demo-replace-hammer-btn")
 
 	//=====ELEMENTS AND STATE=====//
 	// audio
@@ -355,13 +355,70 @@ window.onload = () => {
 	 * congregants leave the church during service and read the door and go home
 	 */
 	function endSermonEarly() {
-		//[TODO] write this
+		if (!congregating) {
+			console.log("nobody's in there")
+			return
+		}
+		congregating = false
+		slam.play()
+		world.animate(
+			[
+				{ scale: "100%" },
+				{ scale: "103%" },
+				{ scale: "100%" },
+			],
+			{
+				duration: 100,
+				iterations: 1,
+				delay: 0,
+				easing: "steps(2)",
+			}
+		)
+		const r = door.getBoundingClientRect()
+		setTimeout(() => {
+			congregation.classList.remove("walking")
+			congregation.style.animationPlayState = ""
+			new Audio("audio/crowd-ooh.mp3").play()
+			congregation.animate(
+				[
+					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
+					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
+				],
+				{
+					duration: 1350,
+					iterations: 1,
+					delay: 0,
+					easing: "steps(2)",
+				}
+			)
+		}, 100)
+		// hesitate then leave
+		setTimeout(() => {
+			congregation.classList.add("walking")
+			new Audio("audio/crowd-whisper.mp3").play()
+			congregation.animate(
+				[
+					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "-40% 40%" },
+					{ left: "100%", top: "50%", scale: "-80% 80%" },
+				],
+				{
+					duration: 2500,
+					iterations: 1,
+					delay: 0,
+					easing: "linear",
+				}
+			)
+		}, 1450)
 	}
 
 	/**
 	 * congregants approach church and hesitate at the door and then leave
 	 */
 	function protestTheChurch() {
+		if (congregating) {
+			console.log("already inside!")
+			return
+		}
 		new Audio("audio/crowd-talking.mp3").play()
 		const r = door.getBoundingClientRect()
 		congregation.animate(
@@ -386,7 +443,7 @@ window.onload = () => {
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
 				],
 				{
-					duration: 1000,
+					duration: 1350,
 					iterations: 1,
 					delay: 0,
 					easing: "steps(2)",
@@ -409,7 +466,7 @@ window.onload = () => {
 					easing: "linear",
 				}
 			)
-		}, 3500)
+		}, 3850)
 	}
 
 	// DEMO BUTTONS
@@ -420,7 +477,10 @@ window.onload = () => {
 		leaveChurch()
 	})
 
-	// demo: protest the church
+	demoProtestEarlyBtn.addEventListener("click", () => {
+		endSermonEarly()
+	})
+
 	demoProtestBtn.addEventListener("click", () => {
 		protestTheChurch()
 	})
@@ -463,6 +523,14 @@ window.onload = () => {
 			theses.hidden = false
 			thesesPosted = true
 			removeHammerCursor()
+
+			setTimeout(() => {
+				if (congregating) {
+					endSermonEarly()
+				} else {
+					protestTheChurch()
+				}
+			}, 2500)
 			return
 		}
 		knock.play()
