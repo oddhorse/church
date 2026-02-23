@@ -19,11 +19,14 @@ window.onload = () => {
 	//=====ELEMENTS AND STATE=====//
 	// audio
 	const bell = new Audio("audio/bell.mp3")
-	const crowdTalk = new Audio("audio/crowd-talking.mp3")
-	const shh = new Audio("audio/shh.mp3")
-	const knock = new Audio("audio/knock.mp3")
-	const slam = new Audio("audio/slam.mp3")
-	const hammering = new Audio("audio/hammer.mp3")
+	const talkAudio = new Audio("audio/crowd-talking.mp3")
+	const oohAudio = new Audio("audio/crowd-ooh.mp3")
+	const whispAudio = new Audio("audio/crowd-whisper.mp3")
+	const shhAudio = new Audio("audio/shh.mp3")
+	const knockAudio = new Audio("audio/knock.mp3")
+	const slamAudio = new Audio("audio/slam.mp3")
+	const hammerAudio = new Audio("audio/hammer.mp3")
+	const rustleAudio = new Audio("audio/rustle.mp3")
 
 	// elements
 	const light = document.getElementById("light")
@@ -53,7 +56,7 @@ window.onload = () => {
 	//=====HAMMER AND MARTIN LUTHER=====//
 
 	bush.addEventListener("click", () => {
-		new Audio("audio/rustle.mp3").play()
+		rustleAudio.play()
 		wiggleBush()
 		if (!hammerFound && bushClicks < 3) bushClicks++
 		if (!hammerFound && bushClicks === 3) {
@@ -125,7 +128,7 @@ window.onload = () => {
 			}
 		)
 		setTimeout(() => {
-			hammering.play()
+			hammerAudio.play()
 		}, 1000)
 		setTimeout(() => {
 			martin.hidden = true
@@ -308,7 +311,7 @@ window.onload = () => {
 			return
 		}
 		congregating = true
-		crowdTalk.play()
+		talkAudio.play()
 		const r = door.getBoundingClientRect()
 		console.log(`left: ${r.left}px, top: ${r.top}px`)
 		congregation.animate(
@@ -337,7 +340,7 @@ window.onload = () => {
 			}
 		)
 		setTimeout(() => {
-			slam.play()
+			slamAudio.play()
 		}, 2400)
 	}
 
@@ -350,8 +353,8 @@ window.onload = () => {
 			return
 		}
 		congregating = false
-		crowdTalk.play()
-		slam.play()
+		talkAudio.play()
+		slamAudio.play()
 		const r = door.getBoundingClientRect()
 		congregation.animate(
 			[
@@ -389,7 +392,7 @@ window.onload = () => {
 			return
 		}
 		congregating = false
-		slam.play()
+		slamAudio.play()
 		world.animate(
 			[
 				{ scale: "100%" },
@@ -407,7 +410,7 @@ window.onload = () => {
 		setTimeout(() => {
 			congregation.classList.remove("walking")
 			congregation.style.animationPlayState = ""
-			new Audio("audio/crowd-ooh.mp3").play()
+			oohAudio.play()
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
@@ -424,7 +427,7 @@ window.onload = () => {
 		// hesitate then leave
 		setTimeout(() => {
 			congregation.classList.add("walking")
-			new Audio("audio/crowd-whisper.mp3").play()
+			whispAudio.play()
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "-40% 40%" },
@@ -448,7 +451,7 @@ window.onload = () => {
 			console.log("already inside!")
 			return
 		}
-		new Audio("audio/crowd-talking.mp3").play()
+		talkAudio.play()
 		const r = door.getBoundingClientRect()
 		congregation.animate(
 			[
@@ -465,7 +468,7 @@ window.onload = () => {
 		setTimeout(() => {
 			congregation.classList.remove("walking")
 			congregation.style.animationPlayState = ""
-			new Audio("audio/crowd-ooh.mp3").play()
+			oohAudio.play()
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
@@ -482,7 +485,7 @@ window.onload = () => {
 		// hesitate then leave
 		setTimeout(() => {
 			congregation.classList.add("walking")
-			new Audio("audio/crowd-whisper.mp3").play()
+			whispAudio.play()
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "-40% 40%" },
@@ -567,13 +570,13 @@ window.onload = () => {
 			}, 2500)
 			return
 		}
-		knock.play()
+		knockAudio.play()
 		if (congregating) {
 			setTimeout(() => {
-				shh.play()
+				shhAudio.play()
 				setTimeout(() => {
-					knock.pause()
-					knock.currentTime = 0
+					knockAudio.pause()
+					knockAudio.currentTime = 0
 				}, 450)
 			}, 100)
 		}
