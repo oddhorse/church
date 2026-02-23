@@ -357,7 +357,7 @@ window.onload = () => {
 		if (congregating) {
 			// [TODO] make the congregation come out, look at the door, and leave grumbling
 		}
-		crowdTalk.play()
+		new Audio("audio/crowd-talking.mp3").play()
 		const r = door.getBoundingClientRect()
 		congregation.animate(
 			[
@@ -374,6 +374,7 @@ window.onload = () => {
 		setTimeout(() => {
 			congregation.classList.remove("walking")
 			congregation.style.animationPlayState = ""
+			new Audio("audio/crowd-ooh.mp3").play()
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
@@ -390,14 +391,14 @@ window.onload = () => {
 		// hesitate then leave
 		setTimeout(() => {
 			congregation.classList.add("walking")
-			knock.play()
+			new Audio("audio/crowd-whisper.mp3").play()
 			congregation.animate(
 				[
 					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "-40% 40%" },
 					{ left: "100%", top: "50%", scale: "-80% 80%" },
 				],
 				{
-					duration: 2000,
+					duration: 2500,
 					iterations: 1,
 					delay: 0,
 					easing: "linear",
