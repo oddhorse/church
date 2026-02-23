@@ -172,35 +172,66 @@ window.onload = () => {
 		flashTheses()
 	})
 
+
+	//TODO rewrite comments
 	//=====RECURSIVE BELL HANDLING=====//
 	// not biggest recursive fan in the world but simplest way i know to handle the timed nature
+
+	/**
+	 * returns number of times in written form for title
+	 * @param {number} count - number of times bell rings
+	 * @returns word form
+	 */
+	function getCountWord(count) {
+		switch (count) {
+			case 1:
+				return "once"
+			case 2:
+				return "twice"
+			case 3:
+				return "thrice"
+			case 4:
+				return "four times"
+			case 5:
+				return "five times"
+			case 6:
+				return "six times"
+			case 7:
+				return "seven times"
+			case 8:
+				return "eight times"
+			case 9:
+				return "nine times"
+			case 10:
+				return "ten times"
+			case 11:
+				return "eleven times"
+			case 12:
+				return "twelve times"
+			default:
+				return "many times"
+		}
+	}
 
 	/**
 	 * starts church bell ringing number of times.
 	 * @param {number} count - number of times it plays
 	 */
 	function ringChurchBell(count) {
-		ringsRemaining = count - 1 // decrements right before bell plays so we can catch it at 0
-		console.log(`tolling ${count} times!`)
-		bell.play()
-	}
-
-	/**
-	 * handles recursive re-ringing of bell, handling remaining rings count.
-	 * not meant to be run(g) except on finished-ringing callback!
-	 */
-	function ringChurchBellAgain() {
-		if (ringsRemaining === 0) {
-			console.log("ringing done!")
-			return
+		for (let i = 1; i <= count; i++) {
+			const timeTil = (i - 1) * 3300
+			setTimeout(() => {
+				new Audio("audio/bell.mp3").play()
+				pageTitle.innerText = `the bell tolls ${getCountWord(i)}`
+				shineLightUponChurch()
+			}, timeTil)
 		}
-		console.log("ringing again!")
-		ringsRemaining--
-		bell.play()
+		setTimeout(() => {
+			pageTitle.innerText = "church"
+		}, (count + 2) * 3300)
 	}
 
-	bell.addEventListener("playing", () => {
-		pageTitle.innerText = "the bell tolls"
+	function shineLightUponChurch() {
 		light.animate(
 			[
 				{ opacity: "0%" },
@@ -250,13 +281,7 @@ window.onload = () => {
 				easing: "linear",
 			}
 		)
-	})
-
-	bell.addEventListener("ended", () => {
-		console.log("bell done")
-		pageTitle.innerText = "church"
-		ringChurchBellAgain()
-	})
+	}
 
 	// DEMO BUTTONS
 	demoRingBtn.addEventListener("click", () => {
