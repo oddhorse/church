@@ -29,6 +29,7 @@ window.onload = () => {
 	const world = document.getElementById("world")
 	const theses = document.getElementById("theses")
 	const bush = document.getElementById("bush")
+	const door = document.getElementById("door")
 	const congregation = document.getElementById("congregation")
 	const hammer = document.getElementById("hammer")
 	const martin = document.getElementById("martin")
@@ -278,10 +279,12 @@ window.onload = () => {
 		}
 		congregating = true
 		crowdTalk.play()
+		const r = door.getBoundingClientRect()
+		console.log(`left: ${r.left}px, top: ${r.top}px`)
 		congregation.animate(
 			[
 				{ left: "100%", top: "50%", scale: "80%" },
-				{ left: "45%", top: "calc(60% - 30px)", scale: "40%" },
+				{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
 			],
 			{
 				duration: 2500,
@@ -319,10 +322,11 @@ window.onload = () => {
 		congregating = false
 		crowdTalk.play()
 		slam.play()
+		const r = door.getBoundingClientRect()
 		congregation.animate(
 			[
-				{ left: "45%", top: "calc(60% - 30px)", scale: "-40% 40%" }, // note neg x val to flip image
-				{ left: "100%", top: "50%", scale: "-80% 80%" },
+				{ left: `${r.left - 60}px`, top: `${r.top + 8}px`, scale: "-40% 40%" }, // note neg x val to flip image
+				{ left: "100%", top: "40%", scale: "-80% 80%" },
 			],
 			{
 				duration: 2500,
@@ -354,10 +358,11 @@ window.onload = () => {
 			// [TODO] make the congregation come out, look at the door, and leave grumbling
 		}
 		crowdTalk.play()
+		const r = door.getBoundingClientRect()
 		congregation.animate(
 			[
 				{ left: "100%", top: "50%", scale: "80%" },
-				{ left: "45%", top: "calc(60% - 30px)", scale: "40%" }, // stop at door
+				{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" }, // stop at door
 			],
 			{
 				duration: 2500,
@@ -371,8 +376,8 @@ window.onload = () => {
 			congregation.style.animationPlayState = ""
 			congregation.animate(
 				[
-					{ left: "45%", top: "calc(60% - 30px)", scale: "40%" },
-					{ left: "45%", top: "calc(60% - 30px)", scale: "40%" },
+					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
+					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "40%" },
 				],
 				{
 					duration: 1000,
@@ -388,7 +393,7 @@ window.onload = () => {
 			knock.play()
 			congregation.animate(
 				[
-					{ left: "45%", top: "calc(60% - 30px)", scale: "-40% 40%" },
+					{ left: `${r.left - 50}px`, top: `${r.top + 22}px`, scale: "-40% 40%" },
 					{ left: "100%", top: "50%", scale: "-80% 80%" },
 				],
 				{

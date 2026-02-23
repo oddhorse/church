@@ -2,7 +2,7 @@
 
 ## to-do
 
-- [ ] make churchgoing functions calculate location of door and go to it instead of estimating
+- [x] make churchgoing functions calculate location of door and go to it instead of estimating
 - [ ] implement martin luther
   - [x] implement hammer sequence
   - [ ] make crowd reaction
