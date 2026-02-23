@@ -3,10 +3,10 @@
 ## to-do
 
 - [x] make churchgoing functions calculate location of door and go to it instead of estimating
-- [ ] implement martin luther
+- [x] implement martin luther
   - [x] implement hammer sequence
-  - [ ] make crowd reaction
-  - [ ] make ongoing sermon reaction and cancel
+  - [x] make crowd reaction
+  - [x] make ongoing sermon reaction and cancel
 - [ ] unsoup animation situation (maybe small animation lib?)
 - [ ] make js all module imports
 - [ ] unsoup state handling
