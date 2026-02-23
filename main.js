@@ -40,6 +40,7 @@ window.onload = () => {
 	const martin = document.getElementById("martin")
 	const thesesBig = document.getElementById("theses-big")
 	const pageTitle = document.getElementById("page-title")
+	const shroud = document.getElementById("shroud")
 
 	let ringsRemaining = 0
 	let lastHourRung
@@ -56,38 +57,31 @@ window.onload = () => {
 	//=====HAMMER AND MARTIN LUTHER=====//
 
 	bush.addEventListener("click", () => {
-		rustleAudio.play()
-		wiggleBush()
+		tlWiggleBush()
 		if (!hammerFound && bushClicks < 3) bushClicks++
 		if (!hammerFound && bushClicks === 3) {
-			hammerFromBush()
+			tlHammerFromBush()
 			hammerFound = true
 		}
 	})
 
-	function wiggleBush() {
+	function tlWiggleBush() {
+		new Audio("audio/rustle.mp3").play()
 		bush.animate(
 			[
 				{ transform: "translateX(-2px)" },
 				{ transform: "translateX(2px)" },
-				{ transform: "translateX(-2px)" },
-				{ transform: "translateX(2px)" },
-				{ transform: "translateX(-2px)" },
-				{ transform: "translateX(2px)" },
-				{ transform: "translateX(-2px)" },
-				{ transform: "translateX(2px)" },
-				// { transform: "translateY(0px)" },
 			],
 			{
-				duration: 500,
-				iterations: 1,
+				duration: 125,
+				iterations: 4,
 				delay: 0,
 				easing: "ease-in-out",
 			}
 		)
 	}
 
-	function hammerFromBush() {
+	function tlHammerFromBush() {
 		hammer.style.opacity = "100%"
 		hammer.hidden = false
 		hammer.style.zIndex = 1
@@ -108,7 +102,7 @@ window.onload = () => {
 		//bush.style.cursor = "inherit"
 	}
 
-	function flashMartinLuther() {
+	function tlFlashMartinLuther() {
 		martin.hidden = false
 		new Audio("audio/bell.mp3").play()
 		martin.animate(
@@ -135,7 +129,7 @@ window.onload = () => {
 		}, 3000)
 	}
 
-	function flashTheses() {
+	function tlFlashTheses() {
 		thesesBig.hidden = false
 		new Audio("audio/bell.mp3").play()
 		thesesBig.animate(
@@ -178,7 +172,7 @@ window.onload = () => {
 	}
 
 	theses.addEventListener("click", () => {
-		flashTheses()
+		tlFlashTheses()
 	})
 
 
@@ -230,7 +224,7 @@ window.onload = () => {
 			setTimeout(() => {
 				new Audio("audio/bell.mp3").play()
 				pageTitle.innerText = `the bell tolls ${getCountWord(i)}`
-				shineLightUponChurch()
+				tlShineLightUponChurch()
 			}, timeTil)
 		}
 		setTimeout(() => {
@@ -238,7 +232,7 @@ window.onload = () => {
 		}, (count + 2) * 3300)
 	}
 
-	function shineLightUponChurch() {
+	function tlShineLightUponChurch() {
 		light.animate(
 			[
 				{ opacity: "0%" },
@@ -305,7 +299,7 @@ window.onload = () => {
 	/**
 	 * gather congregation
 	 */
-	function goToChurch() {
+	function tlGoToChurch() {
 		if (congregating) {
 			console.log("already congregating")
 			return
@@ -347,7 +341,7 @@ window.onload = () => {
 	/**
 	 * disperse congregation
 	 */
-	function leaveChurch() {
+	function tlLeaveChurch() {
 		if (!congregating) {
 			console.log("nobody's in there")
 			return
@@ -386,7 +380,7 @@ window.onload = () => {
 	/**
 	 * congregants leave the church during service and read the door and go home
 	 */
-	function endSermonEarly() {
+	function tlEndSermonEarly() {
 		if (!congregating) {
 			console.log("nobody's in there")
 			return
@@ -446,7 +440,7 @@ window.onload = () => {
 	/**
 	 * congregants approach church and hesitate at the door and then leave
 	 */
-	function protestTheChurch() {
+	function tlProtestTheChurch() {
 		if (congregating) {
 			console.log("already inside!")
 			return
@@ -503,18 +497,18 @@ window.onload = () => {
 
 	// DEMO BUTTONS
 	demoCongregateBtn.addEventListener("click", () => {
-		goToChurch()
+		tlGoToChurch()
 	})
 	demoDisperseBtn.addEventListener("click", () => {
-		leaveChurch()
+		tlLeaveChurch()
 	})
 
 	demoProtestEarlyBtn.addEventListener("click", () => {
-		endSermonEarly()
+		tlEndSermonEarly()
 	})
 
 	demoProtestBtn.addEventListener("click", () => {
-		protestTheChurch()
+		tlProtestTheChurch()
 	})
 
 
@@ -540,32 +534,32 @@ window.onload = () => {
 		if (day === 0) {
 			// early congregation 
 			if (hr === 9 && min === 15 && sec === 0) {
-				if (thesesPosted) protestTheChurch()
-				else goToChurch()
+				if (thesesPosted) tlProtestTheChurch()
+				else tlGoToChurch()
 			}
-			if (hr === 10 && min === 30 && sec === 0 && !thesesPosted) leaveChurch()
+			if (hr === 10 && min === 30 && sec === 0 && !thesesPosted) tlLeaveChurch()
 
 			// late congregation
 			if (hr === 10 && min === 45 && sec === 0) {
-				if (thesesPosted) protestTheChurch()
-				else goToChurch()
+				if (thesesPosted) tlProtestTheChurch()
+				else tlGoToChurch()
 			}
-			if (hr === 12 && min === 0 && sec === 0 && !thesesPosted) leaveChurch()
+			if (hr === 12 && min === 0 && sec === 0 && !thesesPosted) tlLeaveChurch()
 		}
 	}, 1000)
 
 	church.addEventListener("click", () => {
 		if (hammerActive) {
-			flashMartinLuther()
+			tlFlashMartinLuther()
 			theses.hidden = false
 			thesesPosted = true
 			removeHammerCursor()
 
 			setTimeout(() => {
 				if (congregating) {
-					endSermonEarly()
+					tlEndSermonEarly()
 				} else {
-					protestTheChurch()
+					tlProtestTheChurch()
 				}
 			}, 2500)
 			return
@@ -580,6 +574,10 @@ window.onload = () => {
 				}, 450)
 			}, 100)
 		}
+	})
+
+	shroud.addEventListener("click", () => {
+		shroud.classList.add("gone")
 	})
 
 	//=====UTILITY=====//

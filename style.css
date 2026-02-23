@@ -196,6 +196,22 @@ img.popup {
 	color: black;
 }
 
+#shroud {
+	position: fixed;
+	inset: 0;
+	z-index: 999;
+	backdrop-filter: blur(8px);
+	background: rgba(1, 1, 1, 0);
+	cursor: help;
+	opacity: 1;
+	transition: opacity 40ms linear;
+}
+
+#shroud.gone {
+	opacity: 0;
+	pointer-events: none;
+}
+
 @keyframes church-waggle {
 	0% {
 		transform: rotate(5deg);
