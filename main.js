@@ -14,6 +14,7 @@ window.onload = () => {
 	const demoDisperseBtn = document.getElementById("demo-disperse-btn")
 	const demoProtestEarlyBtn = document.getElementById("demo-protest-early-btn")
 	const demoProtestBtn = document.getElementById("demo-protest-btn")
+	const demoRingOftenTog = document.getElementById("demo-ring-often-toggle")
 
 	//=====ELEMENTS AND STATE=====//
 	// audio
@@ -528,6 +529,9 @@ window.onload = () => {
 
 		// ring bell every hour
 		if (min === 0 && sec == 0) ringChurchBell(hr12)
+		// if ring often is on, ring twice every 10 sec
+		else if (demoRingOftenTog.checked && (sec % 10 == 0)) ringChurchBell(2)
+
 
 		// on sundays
 		if (day === 0) {
